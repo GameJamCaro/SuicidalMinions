@@ -13,6 +13,9 @@ public class MinionController : MonoBehaviour
     public TextMeshPro countDownUI;
     ModeController modeController;
     float jumpPower = 10;
+    SkinnedMeshRenderer ren;
+    Animator animator;
+    bool dead;
 
 
     // Start is called before the first frame update
@@ -21,6 +24,8 @@ public class MinionController : MonoBehaviour
         moveDir = new Vector3(1,0,0);
         rb = GetComponent<Rigidbody>();
         modeController = GameObject.FindWithTag("GameController").GetComponent<ModeController>();
+        ren = GetComponentInChildren<SkinnedMeshRenderer>();
+        animator = GetComponentInChildren<Animator>();
        
     }
 
@@ -40,12 +45,21 @@ public class MinionController : MonoBehaviour
     public void ChangeDir()
     {
         moveDir.x = moveDir.x * -1;
+        if (moveDir.x < 0)
+        {
+            transform.GetChild(1).localRotation = Quaternion.Euler(new Vector3(0, -90, 0));
+        }
+        else
+        {
+            transform.GetChild(1).localRotation = Quaternion.Euler(new Vector3(0, 90, 0));
+        }
     }
 
     public void Jump()
     {
         rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         Debug.Log("Jump");
+        animator.SetTrigger("jump");
     }
 
     private void OnMouseDown()
@@ -67,16 +81,24 @@ public class MinionController : MonoBehaviour
 
     public void Discomfort()
     {
-        StartCoroutine(CountingDown());
+        if (!dead)
+        {
+            animator.SetBool("sad", true);
+            StartCoroutine(CountingDown());
+        }
     }
 
     private void Comfort()
     {
-        StopAllCoroutines();
-        GetComponentInChildren<MeshRenderer>().material.color = Color.white;
-        countDown = 10;
-        countDownUI.text = ""
-;   }
+        if (!dead)
+        {
+            StopAllCoroutines();
+            ren.materials[0].color = Color.white;
+            countDown = 10;
+            countDownUI.text = "";
+            animator.SetBool("sad", false);
+        }
+    }
 
     IEnumerator CountingDown()
     {
@@ -84,13 +106,14 @@ public class MinionController : MonoBehaviour
         yield return new WaitForSeconds(1);
         if (countDown > 0)
         {
-            GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
+            ren.materials[0].color = Color.yellow;
             countDown--;
             StartCoroutine(CountingDown());
         }
         else
         {
-            GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+            ren.materials[0].color = Color.red;
+            animator.SetTrigger("die");
             StartCoroutine(WaitAndDie());
         }
         
@@ -99,8 +122,23 @@ public class MinionController : MonoBehaviour
 
     IEnumerator WaitAndDie()
     {
-        yield return new WaitForSeconds(1);
+        speed = 0;
+        dead = true;
+        yield return new WaitForSeconds(3);
         Destroy(gameObject);
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Ground"))
+            animator.SetBool("falling", true);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+            animator.SetBool("falling", false);
+        
     }
 
 

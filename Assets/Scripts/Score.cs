@@ -46,7 +46,8 @@ public class Score : MonoBehaviour
 
     MinionController GetRandomMinion()
     {
-        return minions[Random.Range(0,minions.Length-1)].GetComponent<MinionController>();
+        int random = Random.Range(0, minions.Length - 1);
+        return minions[random].GetComponent<MinionController>();
     }
 
 }

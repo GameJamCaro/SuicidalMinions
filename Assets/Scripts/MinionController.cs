@@ -16,6 +16,9 @@ public class MinionController : MonoBehaviour
     SkinnedMeshRenderer ren;
     Animator animator;
     bool dead;
+    float randomStartDir;
+    bool justChangedDir;
+    public Color deathColor;
 
 
     // Start is called before the first frame update
@@ -26,7 +29,11 @@ public class MinionController : MonoBehaviour
         modeController = GameObject.FindWithTag("GameController").GetComponent<ModeController>();
         ren = GetComponentInChildren<SkinnedMeshRenderer>();
         animator = GetComponentInChildren<Animator>();
-       
+        randomStartDir = UnityEngine.Random.Range(0,2);
+        if(randomStartDir < 0.5)
+        {
+            ChangeDir();
+        }
     }
 
     private void Update()
@@ -112,7 +119,7 @@ public class MinionController : MonoBehaviour
         }
         else
         {
-            ren.materials[0].color = Color.red;
+            ren.materials[0].color = deathColor;
             animator.SetTrigger("die");
             StartCoroutine(WaitAndDie());
         }
@@ -138,8 +145,24 @@ public class MinionController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
             animator.SetBool("falling", false);
+
+        if (collision.gameObject.CompareTag("Minion"))
+        {
+            
+            if (!justChangedDir)
+            {
+                ChangeDir();
+                justChangedDir = true;
+                StartCoroutine(WaitAndReset());
+            }
+        }
         
     }
 
+    IEnumerator WaitAndReset()
+    {
+        yield return new WaitForSeconds(1);
+        justChangedDir = false;
+    }
 
 }

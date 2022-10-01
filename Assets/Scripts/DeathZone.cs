@@ -7,6 +7,6 @@ public class DeathZone : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Destroy(other.gameObject);
-        Debug.Log("Death");
+        Debug.Log("Death Zone");
     }
 }

@@ -5,24 +5,22 @@ using UnityEngine;
 public class Goal : MonoBehaviour
 {
     public Score score;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
         score.AddToScore();
         Destroy(other.gameObject);
-
     }
 
-    
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("collision");
+        score.AddToScore();
+        Destroy(collision.gameObject);
+    }
+
+
+
+
 }

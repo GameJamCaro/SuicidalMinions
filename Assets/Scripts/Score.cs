@@ -20,7 +20,7 @@ public class Score : MonoBehaviour
     public void AddToScore()
     {
         score++;
-        scoreUI.text = "Rescued: " + score + " / 3";
+        scoreUI.text = "Rescued: " + score + " / 6";
     }
 
     IEnumerator TenSecondsCountDown()
@@ -41,13 +41,32 @@ public class Score : MonoBehaviour
     void Discomfort()
     {
         minions = GameObject.FindGameObjectsWithTag("Minion");
-        GetRandomMinion().Discomfort();
+        if (minions != null)
+        {
+            GetRandomMinion().Discomfort();
+        }
     }
 
     MinionController GetRandomMinion()
     {
-        int random = Random.Range(0, minions.Length - 1);
-        return minions[random].GetComponent<MinionController>();
+        int random = Random.Range(0, minions.Length);
+        if (minions != null)
+        {
+            if (minions[random] != null)
+            {
+                return minions[random].GetComponent<MinionController>();
+            }
+            else
+            {
+                Debug.Log(random);
+                return GetRandomMinion();
+            }
+        }
+        else
+        {
+            Debug.Log(random);
+            return null;
+        }
     }
 
 }

@@ -16,24 +16,39 @@ public class Menu : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Escape))
+        if (SceneManager.GetActiveScene().name != "Menu")
         {
-            if (escapePanel.activeInHierarchy)
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
             {
-                Resume();
-            }
-            else
-            {
-                escapePanel.SetActive(true);
-                Time.timeScale = 0;
+                if (escapePanel.activeInHierarchy)
+                {
+                    Resume();
+                }
+                else
+                {
+                    escapePanel.SetActive(true);
+                    Time.timeScale = 0;
+                }
             }
         }
+    }
+
+    public void Play()
+    {
+        SceneManager.LoadScene("Level1");        
     }
 
 
     public void PlayAgain()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Resume();
+    }
+
+    public void NextLevel()
+    {
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
         Resume();
     }
 

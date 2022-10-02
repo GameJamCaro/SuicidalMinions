@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class DeathZone : MonoBehaviour
 {
+    public Score scoreScript;
     private void OnTriggerEnter(Collider other)
     {
-        Destroy(other.gameObject);
+        scoreScript.AddLeavingtMinion();
         Debug.Log("Death Zone");
+        Destroy(other.gameObject);
+        
     }
 }

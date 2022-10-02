@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ModeController : MonoBehaviour
 {
-    public enum Mode {ChangeDir, Comfort, Jump};
+    public enum Mode {NoMode, ChangeDir, Comfort, Jump};
     public Mode mode;
     public Image[] buttonImages;
     Colors colors;
@@ -14,7 +14,7 @@ public class ModeController : MonoBehaviour
     {
         colors = GetComponent<Colors>();
         ResetImages();
-        buttonImages[0].color = colors.active;
+       
 
     }
 
@@ -29,6 +29,7 @@ public class ModeController : MonoBehaviour
 
     public void ComfortMode()
     {
+        Debug.Log("Comfort");
         mode = Mode.Comfort;
         ResetImages();
         buttonImages[1].color = colors.active;

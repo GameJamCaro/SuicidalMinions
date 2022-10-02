@@ -8,6 +8,7 @@ public class SpawnController : MonoBehaviour
     public int spawnNumber = 3;
     public int spawnInterval = 3;
     int timeCounter = 0;
+    public bool randomMinionDir;
 
     private void Start()
     {
@@ -21,8 +22,12 @@ public class SpawnController : MonoBehaviour
         if (timeCounter < spawnNumber)
         {
             var minion = Instantiate(minions[0], transform.position, Quaternion.identity);
+            if (randomMinionDir)
+            {
+                minion.GetComponent<MinionController>().RandomizeDir();
+            }
             timeCounter++;
-            yield return new WaitForSeconds(spawnInterval);
+            yield return new WaitForSeconds(Random.Range(spawnInterval-1, spawnInterval+1));
             StartCoroutine(WaitAndSpawn());
         }
     }

@@ -13,13 +13,7 @@ public class Goal : MonoBehaviour
         Destroy(other.gameObject);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("collision");
-        score.AddToScore();
-        Destroy(collision.gameObject);
-    }
-
+   
 
 
 

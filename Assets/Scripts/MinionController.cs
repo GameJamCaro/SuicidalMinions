@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.EventSystems;
 
 public class MinionController : MonoBehaviour
 {
@@ -18,7 +19,9 @@ public class MinionController : MonoBehaviour
     bool dead;
     float randomStartDir;
     bool justChangedDir;
+    public Color normalColor;
     public Color deathColor;
+    public Color sadColor;
 
 
     // Start is called before the first frame update
@@ -29,16 +32,47 @@ public class MinionController : MonoBehaviour
         modeController = GameObject.FindWithTag("GameController").GetComponent<ModeController>();
         ren = GetComponentInChildren<SkinnedMeshRenderer>();
         animator = GetComponentInChildren<Animator>();
-        randomStartDir = UnityEngine.Random.Range(0,2);
-        if(randomStartDir < 0.5)
+       
+        
+    }
+
+    public void RandomizeDir()
+    {
+        randomStartDir = UnityEngine.Random.Range(0, 2);
+
+        if (randomStartDir < 0.5)
         {
             ChangeDir();
         }
     }
 
+    public float raylength;
+    public LayerMask layerMask;
+
+
     private void Update()
     {
-        
+    //    if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+    //    {
+    //        RaycastHit hit;
+    //        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+    //        if (Physics.Raycast(ray, out hit, raylength, layerMask))
+    //        {
+    //            if (modeController.mode == ModeController.Mode.ChangeDir)
+    //            {
+    //                ChangeDir();
+    //            }
+    //            if (modeController.mode == ModeController.Mode.Comfort)
+    //            {
+    //                Comfort();
+    //            }
+    //            if (modeController.mode == ModeController.Mode.Jump)
+    //            {
+    //                Jump();
+    //            }
+    //        }
+    //    }
     }
 
 
@@ -47,6 +81,16 @@ public class MinionController : MonoBehaviour
     void FixedUpdate()
     {
        rb.MovePosition(transform.position + moveDir * Time.deltaTime * speed);
+        if (moveDir.x < 0)
+        {
+            transform.GetChild(1).localRotation = Quaternion.Euler(new Vector3(0, -90, 0));
+        }
+        else
+        {
+            transform.GetChild(1).localRotation = Quaternion.Euler(new Vector3(0, 90, 0));
+        }
+
+
     }
 
     public void ChangeDir()
@@ -67,24 +111,32 @@ public class MinionController : MonoBehaviour
         rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         Debug.Log("Jump");
         animator.SetTrigger("jump");
+        if (moveDir.x < 0)
+        {
+            transform.GetChild(1).localRotation = Quaternion.Euler(new Vector3(0, -90, 0));
+        }
+        else
+        {
+            transform.GetChild(1).localRotation = Quaternion.Euler(new Vector3(0, 90, 0));
+        }
     }
 
-    private void OnMouseDown()
-    {
-        if(modeController.mode == ModeController.Mode.ChangeDir)
-        {
-            ChangeDir();
-        }
-        if (modeController.mode == ModeController.Mode.Comfort)
-        {
-            Comfort();
-        }
-        if (modeController.mode == ModeController.Mode.Jump)
-        {
-            Jump();
-        }
+    //private void OnMouseDown()
+    //{
+    //    if (modeController.mode == ModeController.Mode.ChangeDir)
+    //    {
+    //        ChangeDir();
+    //    }
+    //    if (modeController.mode == ModeController.Mode.Comfort)
+    //    {
+    //        Comfort();
+    //    }
+    //    if (modeController.mode == ModeController.Mode.Jump)
+    //    {
+    //        Jump();
+    //    }
 
-    }
+    //}
 
     public void Discomfort()
     {
@@ -95,16 +147,17 @@ public class MinionController : MonoBehaviour
         }
     }
 
-    private void Comfort()
+    public void Comfort()
     {
         if (!dead)
         {
             StopAllCoroutines();
-            ren.materials[0].color = Color.white;
+            ren.materials[0].SetColor("_EmissionColor", normalColor);
             countDown = 10;
             countDownUI.text = "";
             animator.SetBool("sad", false);
         }
+        
     }
 
     IEnumerator CountingDown()
@@ -113,13 +166,13 @@ public class MinionController : MonoBehaviour
         yield return new WaitForSeconds(1);
         if (countDown > 0)
         {
-            ren.materials[0].color = Color.yellow;
+            ren.materials[0].SetColor("_EmissionColor", sadColor); 
             countDown--;
             StartCoroutine(CountingDown());
         }
         else
         {
-            ren.materials[0].color = deathColor;
+            ren.materials[0].SetColor("_EmissionColor", deathColor);
             animator.SetTrigger("die");
             StartCoroutine(WaitAndDie());
         }
@@ -131,7 +184,9 @@ public class MinionController : MonoBehaviour
     {
         speed = 0;
         dead = true;
+        
         yield return new WaitForSeconds(3);
+        modeController.gameObject.GetComponent<Score>().AddLeavingtMinion();
         Destroy(gameObject);
     }
 
@@ -157,6 +212,29 @@ public class MinionController : MonoBehaviour
             }
         }
         
+    }
+
+
+
+    void UnityApiMouseEvents()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, Vector3.back ,out hit))
+        {
+            if (modeController.mode == ModeController.Mode.ChangeDir)
+            {
+                ChangeDir();
+            }
+            if (modeController.mode == ModeController.Mode.Comfort)
+            {
+                Comfort();
+            }
+            if (modeController.mode == ModeController.Mode.Jump)
+            {
+                Jump();
+            }
+        }
+
     }
 
     IEnumerator WaitAndReset()

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6460045261402439420}
   - component: {fileID: 6460045261402439399}
   m_Layer: 3
-  m_Name: Minion2
+  m_Name: Minion3
   m_TagString: Minion
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 6460045261402439421}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -5.73, y: 5.03, z: 2.952423}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6460045262381820554}
@@ -114,8 +114,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de32e99d41c3820428e88bed3af46dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 2
+  speed: 3
   countDownUI: {fileID: 6460045262381820553}
+  jumpPower: 7
+  jumpSpeed: 1
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   deathColor: {r: 0.99607843, g: 0.56167644, b: 0.10980393, a: 1}
   sadColor: {r: 0.3237362, g: 0.4241119, b: 0.9150943, a: 1}
@@ -326,17 +328,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 23e417b7c61e4594280cec92b61f1d50,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.45
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 23e417b7c61e4594280cec92b61f1d50,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.45
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 23e417b7c61e4594280cec92b61f1d50,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.45
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 23e417b7c61e4594280cec92b61f1d50,
         type: 3}
@@ -346,7 +348,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 23e417b7c61e4594280cec92b61f1d50,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.97
+      value: -0.948
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 23e417b7c61e4594280cec92b61f1d50,
         type: 3}
@@ -398,6 +400,11 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c5dcf827d98cdc34a9f48de7355ea834, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 23e417b7c61e4594280cec92b61f1d50,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23e417b7c61e4594280cec92b61f1d50, type: 3}
 --- !u!4 &6785809239886062151 stripped

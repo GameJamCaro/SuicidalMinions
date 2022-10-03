@@ -13,7 +13,8 @@ public class MinionController : MonoBehaviour
     int countDown = 10;
     public TextMeshPro countDownUI;
     ModeController modeController;
-    float jumpPower = 10;
+    public float jumpPower = 10;
+    public float jumpSpeed = 2;
     SkinnedMeshRenderer ren;
     Animator animator;
     bool dead;
@@ -106,37 +107,54 @@ public class MinionController : MonoBehaviour
         }
     }
 
+
+    bool jumping;
+    int jumpCount;
+    WaitForSeconds resetWait = new WaitForSeconds(1);
+    WaitForSeconds resetWait1 = new WaitForSeconds(3);
+
     public void Jump()
     {
-        rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-        Debug.Log("Jump");
-        animator.SetTrigger("jump");
-        if (moveDir.x < 0)
+        if (jumpCount == 0)
         {
-            transform.GetChild(1).localRotation = Quaternion.Euler(new Vector3(0, -90, 0));
+            Debug.Log("jump");
+            jumpCount++;
+            speed += jumpSpeed;
+            rb.AddForce(new Vector3(1, 2, 0) * jumpPower, ForceMode.Impulse);
+            Debug.Log("Jump");
+            animator.SetTrigger("jump");
+            StartCoroutine(JumpSpeedReset());
+
+        }
+        else if(jumpCount == 1)
+        {
+            rb.AddForce(new Vector3(-.75f, 1, 0) * jumpPower, ForceMode.Impulse);
+            Debug.Log("Jump");
+            animator.SetTrigger("jump");
+            jumpCount++;
+            
         }
         else
         {
-            transform.GetChild(1).localRotation = Quaternion.Euler(new Vector3(0, 90, 0));
+            StartCoroutine(DoubleJumpReset());
         }
+        
     }
 
-    //private void OnMouseDown()
-    //{
-    //    if (modeController.mode == ModeController.Mode.ChangeDir)
-    //    {
-    //        ChangeDir();
-    //    }
-    //    if (modeController.mode == ModeController.Mode.Comfort)
-    //    {
-    //        Comfort();
-    //    }
-    //    if (modeController.mode == ModeController.Mode.Jump)
-    //    {
-    //        Jump();
-    //    }
+    IEnumerator JumpSpeedReset()
+    {
+        yield return resetWait;
+        speed -= jumpSpeed;
+        yield return resetWait;
+        jumpCount = 0;
+    }
 
-    //}
+    IEnumerator DoubleJumpReset()
+    {
+        yield return resetWait1;
+        jumpCount = 0;
+    }
+
 
     public void Discomfort()
     {

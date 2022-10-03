@@ -18,6 +18,7 @@ public class Dialog : MonoBehaviour
     public AudioSource voiceSource;
     public AudioClip[] voices;
     WaitForSeconds wait;
+    public GameObject continueButton;
 
     
 
@@ -25,6 +26,7 @@ public class Dialog : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        continueButton.SetActive(false);
         StartCoroutine(WaitAndIntroduce());
 
         SetStory(0);
@@ -37,6 +39,11 @@ public class Dialog : MonoBehaviour
     void SetStory(int index)
     {
         story = new Story(textAssets[index].text);
+    }
+
+    public void Continue()
+    {
+        GetNextStoryBlock();
     }
 
 
@@ -79,8 +86,9 @@ public class Dialog : MonoBehaviour
         }
         else 
         {
-            //GameManager.instance.SpawnEnemyGroup(0);
+            
             Debug.Log("Dialog over");
+            continueButton.SetActive(false);
             
             
             
@@ -116,12 +124,11 @@ public class Dialog : MonoBehaviour
                 if (count % 3 == 0 )
                 {
 
-
-                    {
+                   {
                         voiceSource.clip = voices[0];
                         voiceSource.pitch = Random.Range(.5f, 1);
                         voiceSource.Play();
-                    }
+                   }
                 }
                 count++;
             }
@@ -133,8 +140,10 @@ public class Dialog : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         GetNextStoryBlock();
-        
-        StartCoroutine(WaitAndIntroduce());
+
+        continueButton.SetActive(true);
+
+
 
     }
 

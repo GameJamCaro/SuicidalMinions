@@ -117,8 +117,8 @@ MonoBehaviour:
   speed: 2
   countDownUI: {fileID: 6460045262381820553}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
-  deathColor: {r: 0.9960785, g: 0.38823533, b: 0.10980393, a: 1}
-  sadColor: {r: 0.83333325, g: 1, b: 0, a: 0}
+  deathColor: {r: 0.99607843, g: 0.4897054, b: 0.10980393, a: 1}
+  sadColor: {r: 0, g: 0.0042738914, b: 1, a: 0}
   raylength: 100
   layerMask:
     serializedVersion: 2
